@@ -88,12 +88,12 @@ x_norm
 y=np.array(y).reshape(-1,1)
 
 
-lm(X=x_norm, Y=y, verbose=False, maxiter=1000000, alpha =0.1, restart=1, tol= 1e-8)
+lm(X=x_norm, Y=y, verbose=False, maxiter=100000, alpha =0.1, restart=1, tol= 1e-8)
 
 a=[]
 c=[]
-for alpha in np.log10(np.logspace(0.00001,0.002,50)):
-    finalb,finalW, mincost = lm(X=x, Y=y, verbose=False, maxiter=50000, alpha =alpha, restart=1)
+for alpha in np.log10(np.logspace(0.001,0.4,200)):
+    beta, mincost = lm(X=x_norm, Y=y, verbose=False, maxiter=10000, alpha =alpha, restart=1)
     a+=[alpha]
     c+=[mincost]
     print('{0:0.2f} --> {1:0.2f}'.format(alpha, mincost))
