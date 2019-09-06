@@ -11,24 +11,22 @@ def initbeta(n):
 ################## computing cost and gradient ##########################
 
 def rmse(X,y,b=0,W=0):
-    print(X)
     m,n = X.shape
     ypred = np.dot(X,W) + b
     err = (y - ypred)
-    #cost = 1/(2*m)*(err.dot(err.T))
+    # cost = 1/(2*m)*(err.dot(err.T))
     cost = (1/(2*m)) * np.sum(np.square(err))
     db = -np.sum(err)/float(m)
-    #dW = 1/m*((err*x).sum(axis=1)).reshape(-1,1)
-    #print(err.shape,X.shape)
+    # dW = 1/m*((err*x).sum(axis=1)).reshape(-1,1)
+    # print(err.shape,X.shape)
     dW = -(1/m)*X.T.dot(err)
-    #dW = -(1/m)*np.sum(np.multiply(X,err), axis=0)
+    # dW = -(1/m)*np.sum(np.multiply(X,err), axis=0)
     return (cost, db, dW)
 
 
 ##################### gradient descent #################################
 
 def descend(X, y, alpha=0.001, verbose=True, maxiter=100, tol=1e-6):
-    print(X)
     m,n = X.shape
     b,W = initbeta(n)
     oldcost,i = np.inf,0
@@ -65,19 +63,9 @@ def lm(X, y, alpha=0.001, verbose=True, maxiter=100, restart=1, tol = 1e-6):
     for i in range(restart):
         beta, cost = descend(X, y, alpha=alpha, verbose=verbose,maxiter=maxiter, tol=tol)
         if cost < mincost:
-            #print('{0:0.2f} at {1}th iteration'.format(cost,i+1))
+            # print('{0:0.2f} at {1}th iteration'.format(cost,i+1))
             finalbeta = beta
             mincost = cost
         else:
             continue
     return finalbeta, mincost
-
-################### testing data ##########################################
-
-# x = np.arange(10).reshape(1,-1)
-# z = np.arange(100,110)
-# y= 2*x+z+50
-# y=2*x+100
-# x=np.array([x,z])
-# lm(X=x_norm, Y=y, verbose=False, maxiter=100000, alpha =0.1, restart=1, tol= 1e-8)
-
