@@ -51,7 +51,7 @@ def descend(x, y, alpha=0.001, verbose=True, maxiter=100, tol=1e-6):
         print('Decrease alpha : solution not converging')
         return (np.nan,cost)
     elif i < maxiter:
-        print('Solution found in {}th iteration'.format(i))   
+        print('Solution found in {}th iteration '.format(i))   
     return (np.append(b,W),cost)
 
 #################### LM wrapper and random restart ##############
