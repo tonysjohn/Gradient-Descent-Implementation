@@ -18,7 +18,7 @@ y_class = np.where(y>np.median(y),1,0)
 
 y_class
 
-predict(logit, x_norm,y_class, x_norm,y_class, verbose=False, maxiter=100000, alpha =0.01, restart=1, tol= 1e-8)
+predict(logit, x_norm,y_class, verbose=False, maxiter=100000, alpha =0.01, restart=1, tol= 1e-8)
 
 logistic(x_norm,y_class, verbose=False, maxiter=100000, alpha =0.01, restart=1, tol= 1e-8)
 
