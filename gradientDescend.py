@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-################## initializing beta ##########################
+################## initializing beta ####################################
 
 def initbeta(n):
     b = np.random.rand()
@@ -24,7 +24,7 @@ def rmse(X,y,b=0,W=0):
     return (cost, db, dW)
 
 
-##################### gradient descent ######################
+##################### gradient descent #################################
 
 def descend(x, y, alpha=0.001, verbose=True, maxiter=100, tol=1e-6):
     m,n = x.shape
@@ -54,9 +54,8 @@ def descend(x, y, alpha=0.001, verbose=True, maxiter=100, tol=1e-6):
         print('Solution found in {}th iteration'.format(i))   
     return (np.append(b,W),cost)
 
-    ###Tony S John
 
-#################### LM wrapper and random restart ##############
+#################### LM wrapper and random restart #######################
 
 def lm(X, Y, alpha=0.001, verbose=True, maxiter=100, restart=1, tol = 1e-6):
     mincost=np.inf
@@ -71,15 +70,17 @@ def lm(X, Y, alpha=0.001, verbose=True, maxiter=100, restart=1, tol = 1e-6):
             continue
     return finalbeta, mincost
 
-################### testing data ##############################
+################### testing data ##########################################
 
 # x = np.arange(10).reshape(1,-1)
 # z = np.arange(100,110)
 # y= 2*x+z+50
 # y=2*x+100
 # x=np.array([x,z])
+# lm(X=x_norm, Y=y, verbose=False, maxiter=100000, alpha =0.1, restart=1, tol= 1e-8)
 
-###################### reading data ###########################
+
+###################### reading data #######################################
 df=pd.read_csv(r".\energydata_complete.csv")
 df.date=pd.to_datetime(df.date)
 y=df["Appliances"]
@@ -107,7 +108,7 @@ import matplotlib.pyplot as plt
 plt.plot(a, c, 'o')
 
 
-##################### Comparing with Statmodel ################
+##################### Comparing with Statmodel #############################
 df.describe()
 
 import statsmodels.api as sm
