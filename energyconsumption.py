@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from gradientDescend import lm,logit,predict
+from gradientDescend import lm
 
 
 ###################### reading data #######################################
@@ -21,6 +21,10 @@ y_class
 predict(logit, x_norm,y_class, x_norm,y_class, verbose=False, maxiter=100000, alpha =0.01, restart=1, tol= 1e-8)
 
 logistic(x_norm,y_class, verbose=False, maxiter=100000, alpha =0.01, restart=1, tol= 1e-8)
+
+model = lm(verbose=False, maxiter=100000, alpha =0.01, restart=1, tol= 1e-8)
+
+model.fit(x_norm, y)
 
 
 a=[]
