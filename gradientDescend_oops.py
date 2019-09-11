@@ -26,8 +26,8 @@ class lm():
         self.X = X
         self.y = y
         self.m, self.n = X.shape
-        b = np.random.rand()*0.01
-        W = np.random.rand(self.n,1)*0.01
+        self.b = np.random.rand()*0.01
+        self.W = np.random.rand(self.n,1)*0.01
 
     ################## computing OLS cost and gradient ######################
 
@@ -40,10 +40,17 @@ class lm():
 
     ####################### predict lm #####################################
 
-    def predictlm(self):
-        ypred = np.dot(self.X,self.W) + self.b
-        err = (self.y - ypred)
-        cost = (1/(2*self.m)) * np.sum(np.square(err))
+    def predictlm(self, newX=None, newy=None):
+        if newX is None:
+            ypred = np.dot(self.X,self.W) + self.b
+            err = (self.y - ypred)
+            cost = (1/(2*self.m)) * np.sum(np.square(err))
+            return (ypred, cost)
+        
+        m,n =newX.shape
+        ypred = np.dot(newX,self.W) + self.b
+        err = (newy - ypred)
+        cost = (1/(2*m)) * np.sum(np.square(err))
         return (ypred, cost)
 
     ################## computing MLE cost and gradient ######################
@@ -110,6 +117,8 @@ class lm():
     #################### LM wrapper and random restart #######################
 
     def fit(self, X, y):
+        X = np.array(X)
+        y = np.array(y).reshape(-1,1)
         mincost=np.inf
         for i in range(self.restart):
             self.initialize(X,y)
@@ -139,19 +148,17 @@ class lm():
     ########################### Predict function ################################
 
 
-    def predict(method, X, y, newX=None, newy=None, alpha=0.001, verbose=True, maxiter=10000, restart=1, tol = 1e-6):
-        if method not in [lm,logit]:
-            print("Please provide a method")
+    def predict(self, newX=None, newy=None):
+        if (self.b==0 and self.W ==0):
+            print("Fit the model before calling predict")
             return None
-        b, W, cost = method(X, y, alpha=alpha, verbose=verbose, maxiter=maxiter, restart=restart, tol = tol)
         if newX is None:
-            if method == lm:
-                return (predictlm(X,y,b,W), None)
-            elif method == logit:
-                return (predictlogit(X,y,b,W), None)
+            return (self.predictlm(), None)
         else:
-            if method == lm:
-                return (predictlm(X,y,b,W), predictlm(newX,newy,b,W))
-            elif method == logit:
-                return (predictlogit(X,y,b,W), predictlogit(newX,newy,b,W))
-
+            newX = np.array(newX)
+            newy = np.array(newy).reshape(-1,1)
+            return (self.predictlm(), self.predictlm(newX,newy))
+    
+class logit(lm):
+    def method(self):
+        return self.mle()
