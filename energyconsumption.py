@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
-from gradientDescend_oops import lm
-
+from gradientDescend_oops import lm,logit
+from gradientDescend import logit
 
 ###################### reading data #######################################
 df=pd.read_csv(r".\energydata_complete.csv")
@@ -27,22 +27,29 @@ x_train_std = X_train.std(axis=0)
 X_train_norm = (X_train-x_train_mean)/x_train_std
 X_test_norm = (X_test-x_train_mean)/x_train_std
 
-y_class = np.where(y>np.median(y),1,0)
+y_train_class = np.where(y_train>np.median(y_train),1,0)
+y_test_class = np.where(y_test>np.median(y_train),1,0)
 
 (1/(2*y_test.shape[0])) * np.sum(np.square(y_test-y.mean()))
 
-y_class
+y_class =np.where(y>np.median(y),1,0)
 
 predict(logit, x_norm,y_class, x_norm,y_class, verbose=False, maxiter=100000, alpha =0.01, restart=1, tol= 1e-8)
 
-logistic(x_norm,y_class, verbose=False, maxiter=100000, alpha =0.001, restart=1, tol= 1e-8)
+logit(x_norm, y_class, verbose=False, maxiter=100000, alpha =0.2, restart=1, tol= 1e-8)
 
 model = lm(verbose=False, maxiter=100000, alpha =0.1, restart=1, tol= 1e-8)
 
 finalb, finalW, cost_hist = model.fit(X_train_norm, y_train)
 
-
 model.predict(X_test_norm,y_test)
+
+model = logit(verbose=False, maxiter=100000, alpha =0.2, restart=1, tol= 1e-8)
+
+finalb, finalW, cost_hist = model.fit(X_train_norm, y_train_class)
+
+model.predict(X_test_norm,y_test_class)
+
 
 cost_hist[-1]
 
@@ -74,6 +81,6 @@ mod = sm.OLS(y_train, X_train_norm)
 res = mod.fit()
 res.summary()
 
-mod1=smd.Logit(y_class, x_norm).fit()
+mod1=smd.Logit(y_train_class, X_train_norm).fit()
 mod1.summary()
 

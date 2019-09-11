@@ -41,6 +41,7 @@ class lm():
     ####################### predict lm #####################################
 
     def predictlm(self, newX=None, newy=None):
+
         if newX is None:
             ypred = np.dot(self.X,self.W) + self.b
             err = (self.y - ypred)
@@ -51,26 +52,6 @@ class lm():
         ypred = np.dot(newX,self.W) + self.b
         err = (newy - ypred)
         cost = (1/(2*m)) * np.sum(np.square(err))
-        return (ypred, cost)
-
-    ################## computing MLE cost and gradient ######################
-
-    def mle(X,y,b=0,W=0):
-        m,n = X.shape
-        ypred, cost = predictlogit(X,y,b,W)
-        err= y - ypred
-        db = -np.sum(err)/float(m)
-        dW = -(1/m)*X.T.dot(err)
-        return (cost, db, dW)
-
-    ####################### predict logit ##################################
-
-    def predictlogit(X,y,b,W):
-        m,n = X.shape
-        z = np.dot(X,W) + b
-        ypred = 1/(1+np.exp(-z))
-        err = (y - ypred)
-        cost = -(1/m) * (y.T.dot(np.log(ypred)).reshape(-1)+(1-y).T.dot(np.log(1-ypred)).reshape(-1))
         return (ypred, cost)
 
     ######################### selecting method #############################
@@ -120,7 +101,7 @@ class lm():
         X = np.array(X)
         y = np.array(y).reshape(-1,1)
         mincost=np.inf
-        for i in range(self.restart):
+        for _ in range(self.restart):
             self.initialize(X,y)
             cost_hist = self.descend()
             if cost_hist[-1] < mincost:
@@ -131,19 +112,6 @@ class lm():
                 continue
         return finalb, finalW, cost_hist
 
-    #################### Logistic wrapper and random restart #######################
-
-    def logit(X, y, alpha=0.001, verbose=True, maxiter=10000, restart=1, tol = 1e-6):
-        mincost=np.inf
-        for i in range(restart):
-            b,W, cost = descend(X, y, mth="binary", alpha=alpha, verbose=verbose,maxiter=maxiter, tol=tol)
-            if cost < mincost:
-                finalb = b
-                finalW = W
-                mincost = cost
-            else:
-                continue
-        return finalb, finalW, mincost
 
     ########################### Predict function ################################
 
@@ -160,5 +128,40 @@ class lm():
             return (self.predictlm(), self.predictlm(newX,newy))
     
 class logit(lm):
+
     def method(self):
         return self.mle()
+
+    ################## computing MLE cost and gradient ######################
+
+    def predictlogit(self, newX=None, newy=None):
+
+        if newX is None:
+            z = np.dot(self.X,self.W) + self.b
+            ypred = 1/(1+np.exp(-z))
+            cost = -(1/self.m) * (self.y.T.dot(np.log(ypred)).reshape(-1)+(1-self.y).T.dot(np.log(1-ypred)).reshape(-1))
+            return (ypred, cost)
+
+        m,n =newX.shape
+        z = np.dot(newX,self.W) + self.b
+        ypred = 1/(1+np.exp(-z))
+        cost = -(1/m) * (newy.T.dot(np.log(ypred)).reshape(-1)+(1-newy).T.dot(np.log(1-ypred)).reshape(-1))
+        return (ypred, cost)
+
+    def mle(self):
+        ypred, cost = self.predictlogit()
+        err= self.y - ypred
+        db = -(1/self.m)*np.sum(err)
+        dW = -(1/self.m)*(self.X.T.dot(err))
+        return (cost, db, dW)
+
+    def predict(self, newX=None, newy=None):
+        if (self.b==0 and self.W ==0):
+            print("Fit the model before calling predict")
+            return None
+        if newX is None:
+            return (self.predictlogit(), None)
+        else:
+            newX = np.array(newX)
+            newy = np.array(newy).reshape(-1,1)
+            return (self.predictlogit(), self.predictlogit(newX,newy))
