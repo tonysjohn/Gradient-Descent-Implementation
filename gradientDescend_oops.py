@@ -67,31 +67,31 @@ class lm():
     ##################### gradient descent #################################
 
     def descend(self):
-        i = 0
+        iter = 0
         cost_hist = [np.inf]
         cost, db, dW = self.method()
         cost_hist.append(cost)
-        i += 1
+        iter += 1
         self.betaUpdate(db,dW)
 
-        while (cost_hist[i-1] - cost_hist[i] > self.tol):
+        while (cost_hist[iter-1] - cost_hist[iter] > self.tol):
             cost, db, dW = self.method()
             self.betaUpdate(db,dW)
             cost_hist.append(cost)
-            i += 1
+            iter += 1
 
             if self.verbose==True:
-                print(cost_hist[i])
+                print(cost_hist[iter])
             
-            if (i==self.maxiter):
+            if (iter==self.maxiter):
                 print("Max Threshold Exceeded")
                 return cost_hist
 
-        if cost_hist[i-1] < cost_hist[i]:
+        if cost_hist[iter-1] < cost_hist[iter]:
             print('Decrease alpha : solution not converging')
             return cost_hist
-        if i < self.maxiter:
-            print('Solution found in {}th iteration'.format(i))   
+        if iter < self.maxiter:
+            print('Solution found in {}th iteration'.format(iter))   
         return cost_hist
 
 
