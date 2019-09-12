@@ -131,9 +131,9 @@ def predict(method, X, y, newX=None, newy=None, alpha=0.001, verbose=True, maxit
     b, W, cost = method(X, y, alpha=alpha, verbose=verbose, maxiter=maxiter, restart=restart, tol = tol)
     if newX is None:
         if method == lm:
-            return (predictlm(X,y,b,W), None)
+            return (predictlm(X,y,b,W), (None,None))
         elif method == logit:
-            return (predictlogit(X,y,b,W), None)
+            return (predictlogit(X,y,b,W), (None,None))
     else:
         if method == lm:
             return (predictlm(X,y,b,W), predictlm(newX,newy,b,W))

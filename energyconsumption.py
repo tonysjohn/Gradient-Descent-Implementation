@@ -73,9 +73,6 @@ model.predict(X_test_norm,y_test_class)
 
 cost_hist[-1]
 
-
-
-
 a=[]
 c=[]
 for alpha in np.log10(np.logspace(10,1,10)):
